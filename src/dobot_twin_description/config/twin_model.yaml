@@ -1,0 +1,35 @@
+# Single source of truth for the twin's model configuration (Phase 1).
+# The geometry itself always comes from the unmodified dobot_description xacro.
+twin_model:
+  xacro: "model/magician_standalone.urdf.xacro"   # relative to share/dobot_description
+  xacro_args:
+    DOF: "4"
+    tool: "gripper"          # suction_cup / pen are future extensions
+    use_camera: "false"
+
+  root_link: "magician_root_link"
+  world_frame: "world"
+
+  # Revolute/prismatic joints that are commanded / reported (4 revolute + gripper).
+  actuated_joints:
+    - magician_joint_1       # base yaw
+    - magician_joint_2       # rear arm pitch (shoulder)
+    - magician_joint_3       # forearm pitch (elbow, relative to rear arm in the URDF)
+    - magician_joint_4       # end-effector yaw
+    - magician_joint_prismatic_l   # gripper: 0 = closed, 0.0135 m = open (per jaw)
+  # Resolved by robot_state_publisher from the actuated joints (do NOT publish independently):
+  mimic_joints:
+    magician_joint_mimic_1: {source: magician_joint_2, multiplier: -1.0}
+    magician_joint_mimic_2: {source: magician_joint_3, multiplier: -1.0}
+    magician_joint_prismatic_r: {source: magician_joint_prismatic_l, multiplier: -1.0}
+
+  # Strictly separated instances: own namespace, own TF prefix, own joint_states topic.
+  instances:
+    sim:
+      namespace: sim
+      label: "SIMULATION"
+      label_color: [0.20, 0.55, 1.00, 1.0]
+    real:
+      namespace: real
+      label: "PHYSICAL ROBOT"
+      label_color: [1.00, 0.55, 0.10, 1.0]

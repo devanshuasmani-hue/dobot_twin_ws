@@ -1,0 +1,14 @@
+# Parameters of the physical-robot bridge (node /real/dobot_bridge). Override on the command line, e.g.
+#   ros2 launch dobot_twin_driver twin_full.launch.py port:=/dev/ttyUSB0
+/real/dobot_bridge:
+  ros__parameters:
+    port: ""                  # "" = auto-detect /dev/ttyUSB* and /dev/ttyACM*
+    baud: 115200
+    poll_hz: 25.0
+    calibration_file: ""      # "" -> ~/.dobot_twin/calibration.yaml  (written by twin_calibrate)
+    limits_profile: ""        # "" -> active_profile of dobot_twin_kinematics/config/limits.yaml
+    arm_timeout_s: 60.0       # ARM expires (and the robot is stopped) after this long without a command
+    speed_pct: 20.0           # initial PTP speed/accel ratio
+    max_speed_pct: 50.0       # hard cap, whatever is requested
+    z_margin_m: 0.010         # extra clearance above the table for REAL motion
+    gripper_inverted: false   # set true if open/close are swapped on your gripper

@@ -1,0 +1,43 @@
+# Joint-limit profiles (degrees). Select with the `limits_profile` parameter of the controller.
+#
+# j3_rel : forearm angle relative to the rear arm (how the original URDF defines J3)
+# j3_abs : forearm angle below horizontal = J2 + J3 (how a datasheet-style J3 range behaves)
+# Both may be set: a pose must then satisfy both.
+#
+# Sources: "urdf" = original dobot_description joint limits; "datasheet" = Dobot Magician flyer
+# (J1 +-135, J2 0..85, J3 -10..95, J4 +-90, reach 320 mm).
+
+active_profile: conservative       # intersection of URDF and datasheet (safe default)
+
+# How the PHYSICAL robot reports J3 (Phase 3). 'relative' = same as URDF. 'absolute' = J2+J3.
+# Verify on your robot: move only J2 and see whether the reported J3 changes.
+j3_convention: relative
+
+# Distance flange -> fingertip centre used for the Cartesian TCP (m). Change when a different tool is fitted.
+tcp_dz: 0.1048
+
+profiles:
+  conservative:
+    j1: [-125, 125]
+    j2: [0, 85]
+    j3_rel: [-15, 70]
+    j3_abs: [-10, 95]
+    j4: [-90, 90]
+    gripper: [0.0, 0.0135]
+    floor_z: 0.0
+  urdf:
+    j1: [-125, 125]
+    j2: [-5, 90]
+    j3_rel: [-15, 70]
+    j3_abs: null
+    j4: [-150, 150]
+    gripper: [0.0, 0.0135]
+    floor_z: 0.0
+  datasheet:
+    j1: [-135, 135]
+    j2: [0, 85]
+    j3_rel: null
+    j3_abs: [-10, 95]
+    j4: [-90, 90]
+    gripper: [0.0, 0.0135]
+    floor_z: 0.0
